@@ -10,6 +10,13 @@ const ctx = canvas.getContext('2d');
 // initialize the score 
 let score = 0; 
 
+// initialize brick row and brick column
+// const brickRowCount = 9; 
+// const brickColumnCount = 5;
+const brickRowCount = 5; 
+const brickColumnCount = 9;
+
+
 // Create ball properties  
 const ball = {
     // start right in the middle, with x & y as the starting point
@@ -74,14 +81,77 @@ function drawScore() {
     ctx.fillText(`Score: ${score}`, canvas.width - 100, 30); 
 }
 
+//Properties of each break
+const brickInfo = {
+    width: 70,
+    height: 20, 
+    padding: 10, 
+    //start point at it's x axis
+    offsetX: 45, 
+    //start point at it's y axis
+    offsetY: 60,
+    visible: true, 
+}
+
+//Create bricks: creating an array of colums with bricks inside
+const bricks = []; 
+
+//loop throught whatever the number of rows is 
+// for (let i = 0; i < brickRowCount; i++){
+//     //have an array for each row
+//     bricks[i] = [];
+
+//     //loop through the colomn count
+//     for (let j = 0; j < brickColumnCount; j++){
+//         //creat x and y value for each brick
+//         const x = i * (brickInfo.width + brickInfo.padding) + brickInfo.offsetX;
+//         const y = j * (brickInfo.height + brickInfo.padding) + brickInfo.offsetY;
+        
+//         //give us an array of the column with the bricks inside: each brick with it's start point at it's x aixs, at it's y aix, and all the propertis in the brickInfo object
+//         bricks[i][j] = { x, y, ...brickInfo}; 
+//     }
+// }
+
+//loop throught whatever the number of column is 
+for (let i = 0; i < brickColumnCount; i++){
+    //have an array of each column
+    bricks[i] = [];
+
+    //loop through the row count
+    for (let j = 0; j < brickRowCount; j++){
+        const x = i * (brickInfo.width + brickInfo.padding) + brickInfo.offsetX;
+        const y = j * (brickInfo.height + brickInfo.padding) + brickInfo.offsetY;
+        bricks[i][j] = { x, y, ...brickInfo};
+    }
+}
+
+console.log(bricks);
+
+//Draw bricks on canvas 
+function drawBricks() {
+    bricks.forEach(column => {
+        column.forEach(brick => {
+            ctx.beginPath();
+            ctx.rect(brick.x, brick.y, brick.width, brick.height);
+            ctx.fillStyle = brick.visible ? '#0095dd' : 'transparent';
+            ctx.fill();
+            ctx.closePath(); 
+        })
+    })
+}
+
+
 // Draw everything
 function draw() {
     drawBall();
     drawPaddle();
     drawScore();
+    drawBricks();
 }
 
 draw();
+
+
 
 
 
